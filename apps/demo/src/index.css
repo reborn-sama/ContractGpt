@@ -1,0 +1,10 @@
+/* ./src/index.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+.App {
+  margin: 0 auto;
+  max-width: 800px;
+}
