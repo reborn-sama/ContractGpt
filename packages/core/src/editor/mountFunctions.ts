@@ -20,8 +20,10 @@ import {
 } from './syntaxes/solidity';
 import {findModel} from './utils/model';
 
-function initTheme(monaco: Monaco) {
-  monaco.editor.defineTheme('myCustomTheme', {
+import { getCodeSuggestion } from "../openaiClient";
+
+function initTheme(MonacoInstance: Monaco) {
+  MonacoInstance.editor.defineTheme('myCustomTheme', {
     "base": "vs-dark",
     "inherit": true,
     "rules": [],
@@ -32,7 +34,7 @@ function initTheme(monaco: Monaco) {
       "editor.lineHighlightBackground": "#ffffff12",
     }
   });
-  monaco.editor.setTheme('myCustomTheme');
+  MonacoInstance.editor.setTheme('myCustomTheme');
 }
 
 function initModels(
@@ -70,6 +72,7 @@ function registerLangs(monaco: Monaco, state: IEditorInitState) {
 }
 
 function registerCommandsAndActions(monaco: Monaco, editor: BaseMonacoEditor, dispatch: any, stateRef: IEditorInitState) {
+  
   // save
   editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS, () => {
     // save
@@ -131,7 +134,7 @@ function registerCommandsAndActions(monaco: Monaco, editor: BaseMonacoEditor, di
       }
     }
     return result;
-  };
+  };  
 }
 
 function registerFileCompletion(monaco: Monaco) {
@@ -217,7 +220,8 @@ function registerFileImports(monaco: Monaco, state: any) {
 function registerListeners(
   editor: BaseMonacoEditor,
   editorApi: EditorApi,
-  editorState: IEditorInitState
+  editorState: IEditorInitState,
+  monaco: Monaco,
 ) {
   const transformCompileError = async (data: { output: any; input: any }) => {
     const models = editorState?.models || [];
@@ -299,6 +303,32 @@ function registerListeners(
   };
 
   registerListenErrorMarkers();
+
+  //listen for ctrl + k
+  editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyK, async () => {
+    const currentPosition = editor.getPosition();
+    if (currentPosition) {
+      const prompt = editor.getValue().slice(0, editor.getModel()?.getOffsetAt(currentPosition) || 0);
+      const suggestion = await getCodeSuggestion(prompt);
+      if (suggestion) {
+        editor.executeEdits('insertSuggestion', [
+          {
+            range: new monaco.Range(
+              currentPosition.lineNumber,
+              currentPosition.column,
+              currentPosition.lineNumber,
+              currentPosition.column
+            ),
+            text: suggestion,
+            forceMoveMarkers: true,
+          },
+        ]);
+      }
+    }
+  });
+
+  
+
 }
 
 function addModels(

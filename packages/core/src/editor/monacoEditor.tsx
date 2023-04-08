@@ -2,7 +2,6 @@ import React, { useEffect, useRef } from 'react';
 import BaseMonaco from 'monaco-editor';
 import ReactBaseMonacoEditor, { Monaco } from "@monaco-editor/react";
 import { ErrorMarker, MarkerSeverity } from 'solive-compiler-utils';
-
 import { BaseMonacoEditor, EditorApi, ModelInfoType } from '../types/monaco';
 import TopBar from "../components/TopBar";
 import FooterConsole from "../components/FooterConsole";
@@ -17,6 +16,10 @@ import {
 } from './mountFunctions';
 import CodeParser from './codeParser';
 import { findModel } from './utils/model';
+
+import { getCodeSuggestion } from "../openaiClient";
+import { openai } from '../openaiClient';
+
 
 interface Props {
   modelInfos: ModelInfoType[];
@@ -43,7 +46,7 @@ function App({modelInfos, height}: Props) {
     actions.updateCodeParserLoading(false);
 
     registerCommandsAndActions(monaco, editor, dispatch, stateRef.current);
-    registerListeners(editor, editorApiRef.current, stateRef.current);
+    registerListeners(editor, editorApiRef.current, stateRef.current,monacoRef.current!); 
   }
 
   function handleEditorBeforeMount(monaco: Monaco) {

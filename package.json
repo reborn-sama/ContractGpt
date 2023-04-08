@@ -70,6 +70,7 @@
     ]
   },
   "dependencies": {
+    "openai": "^3.2.1",
     "react-autosuggest": "^10.1.0"
   }
 }
