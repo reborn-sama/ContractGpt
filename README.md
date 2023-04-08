@@ -13,6 +13,7 @@
     然后按 **Ctrl + k**，就会生成一个合约，检测接收到的地址是不是一个合约地址。
    
 ## demo地址
+* [demo](https://solive-ai-demo.vercel.app/)
 * [YouTube](https://www.youtube.com/watch?v=3qsWsoUJJiI)
 ![demo.png](./demo.png)
 
