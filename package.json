@@ -71,6 +71,7 @@
   },
   "dependencies": {
     "openai": "^3.2.1",
-    "react-autosuggest": "^10.1.0"
+    "react-autosuggest": "^10.1.0",
+    "react-scripts": "4.0.3"
   }
 }
