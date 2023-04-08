@@ -4,9 +4,9 @@ import openaiClient from "./openaiClient";
 async function requestCompletion(prompt) {
   try {
     const response = await openaiClient.createCompletion({
-      engine: "gpt-3.5-turbo",
-      prompt: prompt,
-      max_tokens: 50,
+      engine: "gpt-3.5-turbo-0301",
+      prompt: prompt+"solidity version must be higher than 0.5.0",
+      max_tokens: 150,
       n: 1,
       stop: null,
       temperature: 0.7,
